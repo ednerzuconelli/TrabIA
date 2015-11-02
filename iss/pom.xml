@@ -22,7 +22,7 @@
     <javaxServletJSPVersion>2.3.2-b01</javaxServletJSPVersion>
     <javaxServletVersion>3.0-alpha-1</javaxServletVersion>
     <war-nome>${project.artifactId}-${project.version}</war-nome> 
-    <CATALINA_HOME>C:\java\apache-tomcat-8.0.15</CATALINA_HOME>
+    <CATALINA_HOME>C:\java\apache-tomcat-8.0.28</CATALINA_HOME>
   </properties>
   <dependencies>
   <dependency>
