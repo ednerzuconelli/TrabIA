@@ -1,0 +1,8 @@
+/iss/target/*.jar
+/iss/target
+/iss/*.classpath
+/iss/*.project
+/iss/.settings
+/iss/.metadata
+/IA/nbproject/private/
+/IA/build/
