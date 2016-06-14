@@ -1,3 +1,7 @@
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 
 public class Empresa {
 	private float capital;
@@ -63,6 +67,40 @@ public class Empresa {
 			
 	}
 	
+	public Individuo selecionaMelhor(List<Individuo> populacao){
+		int valor = 0;
+		for (int i = 0; i<populacao.size(); i++){
+			valor = populacao.get(i).getValor();
+			for (int j = 0; j< populacao.get(i).getCromossomo().size(); j++){
+				if (populacao.get(i).getCromossomo().get(j)=="A"){
+					valor += 1000;
+				}
+				if (populacao.get(i).getCromossomo().get(j)=="B"){
+					valor += 2000;
+				}
+				if (populacao.get(i).getCromossomo().get(j)=="C"){
+					valor += 4000;
+				}
+				if (populacao.get(i).getCromossomo().get(j)=="D"){
+					valor += 8000;
+				}
+			}
+			populacao.get(i).setValor(valor);
+		}
+		
+		Collections.sort(populacao, new Comparator<Individuo>(){
+			@Override
+			public int compare(Individuo individuo1, Individuo individuo2){
+				
+				return individuo1.getValor().compareTo(individuo2.getValor());
+			}
+			
+		});
+		
+		return populacao.get(0);
+		 
+		
+	}
 	
 	public boolean resCustoProducao(){
 		return false;

@@ -16,30 +16,31 @@ public class Genetico {
 	public void inicializar(Empresa empresa){
 		
 		List<String> cromossomo = Arrays.asList("A","B","C","D","A") ;
-		for(int i=0;i<20;i++){
+		for(int i=0;i<100;i++){
 		  Collections.shuffle(cromossomo);
 		  Individuo individuo = new Individuo();
 		  individuo.setCromossomo(cromossomo);
 		  Random rn = new Random();
-		  int range = 200 - 10 + 1;
+		  int range = 300 - 10 + 1;
 		  int randomNum =  rn.nextInt(range) + 10;
 		  individuo.setValor(randomNum);
-		  if (atendeRestricao(individuo, empresa))
+		  if (atendeRestricao(individuo, empresa)){
 		    populacao.add(individuo);
+		    //System.out.println(individuo.getCromossomo());
+		  }  
 		}
 		if (populacao.size()>0 ){
-			System.out.println(verificaMelhor(populacao).getCromossomo().toString());
+			System.out.println(verificaMelhor(populacao, empresa).getValor());
 		}
 	}
 	
 	
-	private Individuo verificaMelhor(List<Individuo> populacao){
-		//for (int i = 0; i < populacao.size(); i++){
-			
-		//}
-		return populacao.get(0);
+	private Individuo verificaMelhor(List<Individuo> populacao, Empresa empresa){
+		return empresa.selecionaMelhor(populacao);
 	}
 	
+	
+
 	private boolean atendeRestricao(Individuo individuo, Empresa empresa){
 		boolean valido = false;
 		Converter converter = new Converter();
