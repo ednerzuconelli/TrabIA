@@ -15,6 +15,9 @@ public class Empresa {
 	
 	//custo
 	private float custoInsumo;
+	private float custoFuncionario;
+	private float custoHomemHora;
+	
 	
 	public void Empresa(float capital){
 		this.setCapital(capital);
@@ -32,10 +35,32 @@ public class Empresa {
 			
 	}
 	
+	public boolean resMaoDeObra(int quatidadeProduzir, int custoHomemHora){
+		if ((quantidadeProduzir* 5 <= custoHomemHora)){
+			return true;
+		} else 
+			return false;
+	}
 	
-	public boolean resMaoObra(int quantidadeProduzir){
-		return false;
-		
+	public boolean resCustoProducao(int custoInsumo, int custoFuncionario, int custoMarketing){
+		if (custoInsumo + custoFuncionario + custoMarketing <= getCapital()){
+			return true;
+		} else return false;
+	}
+	
+	public boolean atendeRestricao(int quantidadeProduzir, int funcionarios, 
+			  int custoMarketing, int compraInsumo, int percetualLucro){
+		int quaProduzir = quantidadeProduzir;
+		int estoqueMateriaPrima = getEstMateriaPrima() + compraInsumo;
+		int custoHomemHora = funcionarios * 8;
+		int custoInsumo = compraInsumo * 10;
+		int custoFuncionario = funcionarios *150;
+		if ((resQuantidadeProducao(quaProduzir, estoqueMateriaPrima))
+				&& (resMaoDeObra(quaProduzir , custoHomemHora))
+				&& (resCustoProducao(custoInsumo, custoFuncionario, custoMarketing))){
+			return true;
+		} else return false;
+			
 	}
 	
 	
