@@ -1,43 +1,92 @@
 import java.util.List;
+import java.util.Random;
 
 public class Principal {
 	public static void main(String[] args){
-		Empresa empresaA = new Empresa();
-		Empresa empresaB = new Empresa();
-		empresaA.setCapital(10000);
-		empresaA.setEstMateriaPrima(10000);
-		empresaA.setPercentuallucro(80);
-		empresaA.setEstProduto(0);
-		empresaA.setPreco(10);
-		empresaB.setCapital(10000);
-		empresaB.setEstMateriaPrima(10000);
-		empresaB.setPercentuallucro(80);
-		empresaB.setEstProduto(0);
-		empresaB.setPreco(10);
-		Genetico geneticoA =  new Genetico();
-		geneticoA.inicializar(empresaA);
-		Genetico geneticoB =  new Genetico();
-		geneticoB.inicializar(empresaB);
+		Empresa empresaA = new Empresa((float) 100000.00);
+		Empresa empresaB = new Empresa((float) 100000.00);
+		
+		Genetico genetico =  new Genetico();
+		genetico.inicializarRandom(empresaA);
+		genetico.inicializarRandom(empresaB);
+		
+		genetico.escolheEstrategiaAleatoria(empresaA);
+		
+		genetico.escolheEstrategiaAleatoria(empresaB);
+		
+		System.out.println("Rodada 1:");
+		System.out.println("\nEmpresa A");
+		empresaA.mostraEstrategia();
+		empresaA.atualiza();
+		System.out.println("\nEmpresa B");
+		empresaB.mostraEstrategia();
+		empresaB.atualiza();
+		
+		System.out.println("Resultado:");
+		defineDistribuicao(empresaA,empresaB);
+		System.out.println("Empresa A Vendeu: "+ empresaA.getQuantidadeVendida());
+		System.out.println("Empresa B Vendeu: "+ empresaB.getQuantidadeVendida());
+		
+		
+		
+		
 		
 		
 	}
-	private void verificaGanhador(Individuo primeiro, Individuo segundo){
-		if (primeiro.getValor()> segundo.getValor())
-			System.out.println("Individuo primeiro ganhadorcom R$ "+primeiro.getValor());
-		if (segundo.getValor()> primeiro.getValor())
-			System.out.println("Individuo segundo ganhador com R$ "+segundo.getValor());
-		if (segundo.getValor() == primeiro.getValor())
-			System.out.println("empate técnico com R$ "+segundo.getValor());
-	}
+	
 
-	private Individuo geraMercado(){
-		Individuo individuo = null;
-		individuo.addCromossomo("ABCDC");
-		List<String> cromossomo=null;
-		cromossomo.add("E");
-		individuo.setCromossomo(cromossomo);
-		individuo.setValor(15);
-		return individuo;
+	private static void defineDistribuicao(Empresa empresaA, Empresa empresaB){
+		float fatorPrecoA = 0,fatorPrecoB = 0,fatorMarketingA = 0,fatorMarketingB = 0;
+		float aceitacaoMarketing;
+		float aceitacaoA,aceitacaoB;
+		int mercado;
+		
+		if(empresaA.getPreco()>empresaB.getPreco()){
+			fatorPrecoB=(float) 0.6;
+			fatorPrecoA=(float) 0.4;
+		}
+		
+		if(empresaA.getPreco()<empresaB.getPreco()){
+			fatorPrecoB=(float) 0.4;
+			fatorPrecoA=(float) 0.6;
+		}
+		
+		if(empresaA.getPreco()==empresaB.getPreco()){
+			fatorPrecoB=(float) 0.5;
+			fatorPrecoA=(float) 0.5;
+		}
+		
+		Random rand = new Random();
+		aceitacaoMarketing = rand.nextFloat();
+		
+		aceitacaoA = aceitacaoMarketing * empresaA.getCustoMarketing();
+		aceitacaoB = aceitacaoMarketing * empresaB.getCustoMarketing();
+		
+		if(aceitacaoA>aceitacaoB){
+			fatorMarketingA=(float) 0.6;
+			fatorMarketingB=(float) 0.4;
+		}
+		
+		if(aceitacaoA<aceitacaoB){
+			fatorMarketingA=(float) 0.4;
+			fatorMarketingB=(float) 0.6;
+		}
+		
+		if(aceitacaoA==aceitacaoB){
+			fatorMarketingA=(float) 0.5;
+			fatorMarketingB=(float) 0.5;
+		}
+		
+		mercado = geraMercado();
+		
+		empresaA.setQuantidadeVendida((int) (mercado*((fatorPrecoA+fatorMarketingA)/2)));
+		empresaB.setQuantidadeVendida((int) (mercado*((fatorPrecoB+fatorMarketingB)/2)));
+		
+	}
+	
+	private static int geraMercado(){
+		Random rand = new Random(1000);
+		return rand.nextInt(90000);
 		
 	}
 }

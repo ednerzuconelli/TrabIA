@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Individuo {
-	private Integer valor;
+	private float valor;
 	private List<String> cromossomo;
 	
 	public Individuo(){
@@ -21,11 +21,11 @@ public class Individuo {
 		cromossomo.add(c);
 	}
 
-	public Integer getValor() {
+	public float getValor() {
 		return valor;
 	}
 
-	public void setValor(Integer valor) {
+	public void setValor(float valor) {
 		this.valor = valor;
 	}
 	

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -22,12 +23,27 @@ public class Empresa {
 	private float custoFuncionario;
 	private float custoHomemHora;
 	
+	//Historico de Estrategia
+	private List<Individuo> historicoEstrategia = new ArrayList<Individuo>();
 	
-	public void Empresa(float capital){
+	//Historico Vendido
+	private int quantidadeVendida;
+	
+	public Empresa(float capital){
 		this.setCapital(capital);
+		this.setQuantidadeVendida(0);
+		this.setEstMateriaPrima(0);
+		this.setPreco(capital);
 	}
 	
 	//decisoes
+	public void atualiza(){
+		this.setHomemhora(8*this.getFuncionario());
+		this.setEstMateriaPrima(this.getEstMateriaPrima()+this.getCompraInsumo());
+		this.setEstProduto(this.getEstProduto()+this.quantidadeProduzir);
+		this.setPreco(calculaCustoTotal()*this.getPercentuallucro());
+		this.setCapital(this.getCapital()-calculaCustoTotal());
+	}
 	
 	//restricoes
 	public boolean resQuantidadeProducao(int quantidadeProduzir, int estoqueMateriaPrima){
@@ -67,37 +83,53 @@ public class Empresa {
 			
 	}
 	
-	public Individuo selecionaMelhor(List<Individuo> populacao){
-		int valor = 0;
-		for (int i = 0; i<populacao.size(); i++){
-			valor = populacao.get(i).getValor();
-			for (int j = 0; j< populacao.get(i).getCromossomo().size(); j++){
-				if (populacao.get(i).getCromossomo().get(j)=="A"){
-					valor += 1000;
-				}
-				if (populacao.get(i).getCromossomo().get(j)=="B"){
-					valor += 2000;
-				}
-				if (populacao.get(i).getCromossomo().get(j)=="C"){
-					valor += 4000;
-				}
-				if (populacao.get(i).getCromossomo().get(j)=="D"){
-					valor += 8000;
-				}
-			}
-			populacao.get(i).setValor(valor);
-		}
+	public void aplicaEstrategia(){
 		
-		Collections.sort(populacao, new Comparator<Individuo>(){
-			@Override
-			public int compare(Individuo individuo1, Individuo individuo2){
-				
-				return individuo1.getValor().compareTo(individuo2.getValor());
+	}
+	
+	public void mostraEstrategia(){
+		System.out.println("Quantidade Produzir:" + this.getQuantidadeProduzir());
+		System.out.println("Quantidade Funcionários:" + this.getFuncionario());
+		System.out.println("Quantidade Marketing:" + this.getCustoMarketing());
+		System.out.println("Quantidade Compra Insumo:" + this.getCompraInsumo());
+		System.out.println("Quantidade Percentual Lucro:" + this.getPercentuallucro());
+	}
+	
+	
+	public float simulaReceita(int quantidadeProduzir, int funcionarios, int custoMarketing, int compraInsumo, int percetualLucro){
+		float lucro = 0;
+		float custoTotal=0;
+		int custoInsumo = compraInsumo * 10;
+		int custoFuncionario = funcionarios *150;
+		
+		custoTotal = custoInsumo +  custoFuncionario+custoMarketing;  
+		
+		lucro = (quantidadeVendida * (percetualLucro * custoTotal)) - custoTotal;
+		
+		return lucro;
+	}
+	
+	public float calculaCustoTotal(){
+		float custoTotal=0;
+		
+		int custoInsumo = this.getCompraInsumo() * 10;
+		int custoFuncionario = this.getFuncionario() *150;
+		
+		custoTotal = custoInsumo + + custoFuncionario+this.getCustoMarketing();
+		
+		return custoTotal;
+	}
+	
+	public Individuo selecionaMelhor(List<Individuo> populacao){
+		Individuo escolhido = populacao.get(0);
+		for (Individuo i: populacao){
+			if(i.getValor()>escolhido.getValor()){
+				escolhido = i;
 			}
 			
-		});
+		}
 		
-		return populacao.get(0);
+		return escolhido;
 		 
 		
 	}
@@ -183,7 +215,23 @@ public class Empresa {
 	public void setPercentuallucro(float percentuallucro) {
 		this.percentuallucro = percentuallucro;
 	}
-	
+
+
+	public void addHistorico(Individuo individuo){
+		historicoEstrategia.add(individuo);
+	}
+
+	public int getQuantidadeVendida() {
+		return quantidadeVendida;
+	}
+
+	public void setQuantidadeVendida(int quantidadeVendida) {
+		this.quantidadeVendida = quantidadeVendida;
+	}
+
+	public List<Individuo> getHistoricoEstrategia() {
+		return historicoEstrategia;
+	}
 	
 	
 	
