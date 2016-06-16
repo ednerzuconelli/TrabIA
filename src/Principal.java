@@ -2,7 +2,7 @@ import java.util.List;
 
 public class Principal {
 	public static void main(String[] args){
-		
+		systemm.
 	}
 	private Individuo geraGanhador(Individuo primeiro, Individuo segundo){
 		Individuo individuoGanhador = geraMercado();
