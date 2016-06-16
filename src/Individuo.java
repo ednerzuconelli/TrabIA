@@ -2,23 +2,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Individuo {
-	private int valor;
+	private float valor;
 	private List<String> cromossomo;
 	
 	public Individuo(){
 		cromossomo = new ArrayList<String>();
 	}
 	
-	public int getValor(){
-		return valor;
-	}
-	
 	public List<String> getCromossomo(){
 		return cromossomo;
-	}
-	
-	public void setValor(int valor){
-		this.valor = valor;
 	}
 	
 	public void setCromossomo(List<String> cromossomo){
@@ -28,5 +20,15 @@ public class Individuo {
 	public void addCromossomo(String c){
 		cromossomo.add(c);
 	}
+
+	public float getValor() {
+		return valor;
+	}
+
+	public void setValor(float valor) {
+		this.valor = valor;
+	}
+	
+	
 	
 }

@@ -1,0 +1,240 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+
+public class Empresa {
+	private float capital;
+	private int homemhora;
+	private int estMateriaPrima;
+	private int estProduto;
+	private float preco;
+	
+	//Parametros
+	private float custoMarketing;
+	private int compraInsumo;
+	private int quantidadeProduzir;
+	private int funcionario;
+	private float percentuallucro;
+	
+	//custo
+	private float custoInsumo;
+	private float custoFuncionario;
+	private float custoHomemHora;
+	
+	//Historico de Estrategia
+	private List<Individuo> historicoEstrategia = new ArrayList<Individuo>();
+	
+	//Historico Vendido
+	private int quantidadeVendida;
+	
+	public Empresa(float capital){
+		this.setCapital(capital);
+		this.setQuantidadeVendida(0);
+		this.setEstMateriaPrima(0);
+		this.setPreco(capital);
+	}
+	
+	//decisoes
+	public void atualiza(){
+		this.setHomemhora(8*this.getFuncionario());
+		this.setEstMateriaPrima(this.getEstMateriaPrima()+this.getCompraInsumo());
+		this.setEstProduto(this.getEstProduto()+this.quantidadeProduzir);
+		this.setPreco(calculaCustoTotal()*this.getPercentuallucro());
+		this.setCapital(this.getCapital()-calculaCustoTotal());
+	}
+	
+	//restricoes
+	public boolean resQuantidadeProducao(int quantidadeProduzir, int estoqueMateriaPrima){
+		if((quantidadeProduzir*3)<=estoqueMateriaPrima){
+			return true;
+		}else{
+			return false;
+		}
+			
+	}
+	
+	public boolean resMaoDeObra(int quatidadeProduzir, int custoHomemHora){
+		if ((quantidadeProduzir* 5 <= custoHomemHora)){
+			return true;
+		} else 
+			return false;
+	}
+	
+	public boolean resCustoProducao(int custoInsumo, int custoFuncionario, int custoMarketing){
+		if (custoInsumo + custoFuncionario + custoMarketing <= getCapital()){
+			return true;
+		} else return false;
+	}
+	
+	public boolean atendeRestricao(int quantidadeProduzir, int funcionarios, 
+			  int custoMarketing, int compraInsumo, int percetualLucro){
+		int quaProduzir = quantidadeProduzir;
+		int estoqueMateriaPrima = getEstMateriaPrima() + compraInsumo;
+		int custoHomemHora = funcionarios * 8;
+		int custoInsumo = compraInsumo * 10;
+		int custoFuncionario = funcionarios *150;
+		if ((resQuantidadeProducao(quaProduzir, estoqueMateriaPrima))
+				&& (resMaoDeObra(quaProduzir , custoHomemHora))
+				&& (resCustoProducao(custoInsumo, custoFuncionario, custoMarketing))){
+			return true;
+		} else return false;
+			
+	}
+	
+	public void aplicaEstrategia(){
+		
+	}
+	
+	public void mostraEstrategia(){
+		System.out.println("Quantidade Produzir:" + this.getQuantidadeProduzir());
+		System.out.println("Quantidade Funcionários:" + this.getFuncionario());
+		System.out.println("Quantidade Marketing:" + this.getCustoMarketing());
+		System.out.println("Quantidade Compra Insumo:" + this.getCompraInsumo());
+		System.out.println("Quantidade Percentual Lucro:" + this.getPercentuallucro());
+	}
+	
+	
+	public float simulaReceita(int quantidadeProduzir, int funcionarios, int custoMarketing, int compraInsumo, int percetualLucro){
+		float lucro = 0;
+		float custoTotal=0;
+		int custoInsumo = compraInsumo * 10;
+		int custoFuncionario = funcionarios *150;
+		
+		custoTotal = custoInsumo +  custoFuncionario+custoMarketing;  
+		
+		lucro = (quantidadeVendida * (percetualLucro * custoTotal)) - custoTotal;
+		
+		return lucro;
+	}
+	
+	public float calculaCustoTotal(){
+		float custoTotal=0;
+		
+		int custoInsumo = this.getCompraInsumo() * 10;
+		int custoFuncionario = this.getFuncionario() *150;
+		
+		custoTotal = custoInsumo + + custoFuncionario+this.getCustoMarketing();
+		
+		return custoTotal;
+	}
+	
+	public Individuo selecionaMelhor(List<Individuo> populacao){
+		Individuo escolhido = populacao.get(0);
+		for (Individuo i: populacao){
+			if(i.getValor()>escolhido.getValor()){
+				escolhido = i;
+			}
+			
+		}
+		
+		return escolhido;
+		 
+		
+	}
+	
+	public boolean resCustoProducao(){
+		return false;
+		
+	}
+	
+	//atualiza valores
+	public void atualizaCustoInsumo(float custo){
+		this.setCustoInsumo(custo);
+	}
+	
+	private void setCustoInsumo(float custo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	//funcao Objetivo
+	public float lucro(float custoProducao,float receita){
+		return receita - custoProducao;
+	}
+	
+	//setter and getters
+	public float getCapital() {
+		return capital;
+	}
+	public void setCapital(float capital) {
+		this.capital = capital;
+	}
+	public int getHomemhora() {
+		return homemhora;
+	}
+	public void setHomemhora(int homemhora) {
+		this.homemhora = homemhora;
+	}
+	public int getEstMateriaPrima() {
+		return estMateriaPrima;
+	}
+	public void setEstMateriaPrima(int estMateriaPrima) {
+		this.estMateriaPrima = estMateriaPrima;
+	}
+	public int getEstProduto() {
+		return estProduto;
+	}
+	public void setEstProduto(int estProduto) {
+		this.estProduto = estProduto;
+	}
+	public float getPreco() {
+		return preco;
+	}
+	public void setPreco(float preco) {
+		this.preco = preco;
+	}
+	public float getCustoMarketing() {
+		return custoMarketing;
+	}
+	public void setCustoMarketing(float custoMarketing) {
+		this.custoMarketing = custoMarketing;
+	}
+	public int getCompraInsumo() {
+		return compraInsumo;
+	}
+	public void setCompraInsumo(int compraInsumo) {
+		this.compraInsumo = compraInsumo;
+	}
+	public int getQuantidadeProduzir() {
+		return quantidadeProduzir;
+	}
+	public void setQuantidadeProduzir(int quantidadeProduzir) {
+		this.quantidadeProduzir = quantidadeProduzir;
+	}
+	public int getFuncionario() {
+		return funcionario;
+	}
+	public void setFuncionario(int funcionario) {
+		this.funcionario = funcionario;
+	}
+	public float getPercentuallucro() {
+		return percentuallucro;
+	}
+	public void setPercentuallucro(float percentuallucro) {
+		this.percentuallucro = percentuallucro;
+	}
+
+
+	public void addHistorico(Individuo individuo){
+		historicoEstrategia.add(individuo);
+	}
+
+	public int getQuantidadeVendida() {
+		return quantidadeVendida;
+	}
+
+	public void setQuantidadeVendida(int quantidadeVendida) {
+		this.quantidadeVendida = quantidadeVendida;
+	}
+
+	public List<Individuo> getHistoricoEstrategia() {
+		return historicoEstrategia;
+	}
+	
+	
+	
+	
+
+}
