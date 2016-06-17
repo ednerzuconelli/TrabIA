@@ -122,11 +122,12 @@ public void escolheEstrategiaMelhor(Empresa empresa) {
 
 public void geraFilhos(Empresa empresa) {
 	List<Individuo> novaPopulacao = new ArrayList<Individuo>();
+	empresa.getHistoricoEstrategia().clear();
 	
 	List<Individuo> pais = verificaMelhor(populacao, empresa);
 	Random random = new Random();
 	
-	while(novaPopulacao.size()<20){
+	while(novaPopulacao.size()<100){
 		List<Individuo> filhos = new ArrayList<Individuo>();
 		
 		if(random.nextFloat()<taxaCrossover){
@@ -143,11 +144,14 @@ public void geraFilhos(Empresa empresa) {
 		for(Individuo f:filhos){
 			if(atendeRestricao(f, empresa)){
 				novaPopulacao.add(f);
+				empresa.addHistorico(f);
 			}
 			
 		}
 		
 	}
+	
+	
 	
 }
 

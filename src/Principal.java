@@ -119,7 +119,7 @@ public class Principal {
 	
 	private static int geraMercado(){
 		Random rand = new Random(System.currentTimeMillis()%1000);
-		return rand.nextInt(1000);
+		return rand.nextInt(400);
 		
 	}
 }

@@ -88,7 +88,7 @@ public class Empresa {
 		int quaProduzir = quantidadeProduzir;
 		int estoqueMateriaPrima = getEstMateriaPrima() + compraInsumo;
 		int custoHomemHora = funcionarios * 8;
-		int custoInsumo = compraInsumo * 10;
+		int custoInsumo = compraInsumo * 2;
 		int custoFuncionario = funcionarios *150;
 		if ((resQuantidadeProducao(quaProduzir, estoqueMateriaPrima))
 				&& (resMaoDeObra(quaProduzir , custoHomemHora))
@@ -114,12 +114,12 @@ public class Empresa {
 	public float simulaReceita(int quantidadeProduzir, int funcionarios, int custoMarketing, int compraInsumo, int percetualLucro){
 		float lucro = 0;
 		float custoTotal=0;
-		int custoInsumo = compraInsumo * 10;
+		int custoInsumo = compraInsumo * 2;
 		int custoFuncionario = funcionarios *150;
 		
 		custoTotal = custoInsumo +  custoFuncionario+custoMarketing;  
 		
-		lucro = (this.getQuantidadeSolicitada() * (percetualLucro * (custoTotal/quantidadeProduzir))) - custoTotal;
+		lucro = (float) (((this.getQuantidadeSolicitada()*(this.getQuantidadeSolicitada()+0.3)) * (percetualLucro * (custoTotal/quantidadeProduzir))) - custoTotal);
 		
 		return lucro;
 	}
@@ -127,7 +127,7 @@ public class Empresa {
 	public float calculaCustoTotal(){
 		float custoTotal=0;
 		
-		int custoInsumo = this.getCompraInsumo() * 10;
+		int custoInsumo = this.getCompraInsumo() * 2;
 		int custoFuncionario = this.getFuncionario() *150;
 		
 		custoTotal = custoInsumo + + custoFuncionario+this.getCustoMarketing();
