@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +16,7 @@ public class Empresa {
 	private float custoMarketing;
 	private int compraInsumo;
 	private int quantidadeProduzir;
+	private int quantidadeSolicitada;
 	private int funcionario;
 	private float percentuallucro;
 	
@@ -33,16 +35,30 @@ public class Empresa {
 		this.setCapital(capital);
 		this.setQuantidadeVendida(0);
 		this.setEstMateriaPrima(0);
-		this.setPreco(capital);
+		this.setQuantidadeSolicitada(0);
+	
 	}
 	
 	//decisoes
 	public void atualiza(){
 		this.setHomemhora(8*this.getFuncionario());
 		this.setEstMateriaPrima(this.getEstMateriaPrima()+this.getCompraInsumo());
-		this.setEstProduto(this.getEstProduto()+this.quantidadeProduzir);
-		this.setPreco(calculaCustoTotal()*this.getPercentuallucro());
+		this.setEstProduto(this.getEstProduto()+this.getQuantidadeProduzir());
+		this.setPreco((calculaCustoTotal()/this.getQuantidadeProduzir())*this.getPercentuallucro());
 		this.setCapital(this.getCapital()-calculaCustoTotal());
+		this.historicoEstrategia.clear();
+	}
+	
+	public void atualizaCapital(){
+		this.setCapital(this.getCapital()+this.getQuantidadeVendida()*this.getPreco());
+	}
+
+	
+	public void mostrarResultado(){
+		System.out.println("Quantidade que o mercado solicitou:"+this.getQuantidadeSolicitada());
+		DecimalFormat df = new DecimalFormat("0.00");
+		System.out.println("Custo Total: "+df.format(this.calculaCustoTotal()));
+		System.out.println("Capital: "+ df.format(this.getCapital()));
 	}
 	
 	//restricoes
@@ -55,8 +71,8 @@ public class Empresa {
 			
 	}
 	
-	public boolean resMaoDeObra(int quatidadeProduzir, int custoHomemHora){
-		if ((quantidadeProduzir* 5 <= custoHomemHora)){
+	public boolean resMaoDeObra(int quatidadeProducao, int custoHomemHora){
+		if ((quatidadeProducao* 2 <= custoHomemHora)){
 			return true;
 		} else 
 			return false;
@@ -73,7 +89,7 @@ public class Empresa {
 		int quaProduzir = quantidadeProduzir;
 		int estoqueMateriaPrima = getEstMateriaPrima() + compraInsumo;
 		int custoHomemHora = funcionarios * 8;
-		int custoInsumo = compraInsumo * 10;
+		int custoInsumo = compraInsumo * 2;
 		int custoFuncionario = funcionarios *150;
 		if ((resQuantidadeProducao(quaProduzir, estoqueMateriaPrima))
 				&& (resMaoDeObra(quaProduzir , custoHomemHora))
@@ -99,12 +115,12 @@ public class Empresa {
 	public float simulaReceita(int quantidadeProduzir, int funcionarios, int custoMarketing, int compraInsumo, int percetualLucro){
 		float lucro = 0;
 		float custoTotal=0;
-		int custoInsumo = compraInsumo * 10;
+		int custoInsumo = compraInsumo * 2;
 		int custoFuncionario = funcionarios *150;
 		
 		custoTotal = custoInsumo +  custoFuncionario+custoMarketing;  
 		
-		lucro = (quantidadeVendida * (percetualLucro * custoTotal)) - custoTotal;
+		lucro = (float) (((this.getQuantidadeSolicitada()*(this.getQuantidadeSolicitada()+0.3)) * (percetualLucro * (custoTotal/quantidadeProduzir))));
 		
 		return lucro;
 	}
@@ -112,7 +128,7 @@ public class Empresa {
 	public float calculaCustoTotal(){
 		float custoTotal=0;
 		
-		int custoInsumo = this.getCompraInsumo() * 10;
+		int custoInsumo = this.getCompraInsumo() * 2;
 		int custoFuncionario = this.getFuncionario() *150;
 		
 		custoTotal = custoInsumo + + custoFuncionario+this.getCustoMarketing();
@@ -122,8 +138,9 @@ public class Empresa {
 	
 	public Individuo selecionaMelhor(List<Individuo> populacao){
 		Individuo escolhido = populacao.get(0);
+		Converter converter = new Converter();
 		for (Individuo i: populacao){
-			if(i.getValor()>escolhido.getValor()){
+			if(i.getValor()>escolhido.getValor() && converter.Converter(i.getCromossomo().get(0),0)>= quantidadeSolicitada ){
 				escolhido = i;
 			}
 			
@@ -216,6 +233,15 @@ public class Empresa {
 		this.percentuallucro = percentuallucro;
 	}
 
+	
+
+	public int getQuantidadeSolicitada() {
+		return quantidadeSolicitada;
+	}
+
+	public void setQuantidadeSolicitada(int quantidadeSolicitada) {
+		this.quantidadeSolicitada = quantidadeSolicitada;
+	}
 
 	public void addHistorico(Individuo individuo){
 		historicoEstrategia.add(individuo);
@@ -226,7 +252,19 @@ public class Empresa {
 	}
 
 	public void setQuantidadeVendida(int quantidadeVendida) {
-		this.quantidadeVendida = quantidadeVendida;
+		
+		this.setQuantidadeSolicitada(quantidadeVendida);
+
+		
+		
+		if(this.getEstProduto()>=quantidadeVendida){
+			this.quantidadeVendida = quantidadeVendida;
+			this.setEstProduto(this.getEstProduto()-quantidadeVendida);
+		}else{
+			this.quantidadeVendida = this.getEstProduto();
+			this.setEstProduto(0);
+		}
+		
 	}
 
 	public List<Individuo> getHistoricoEstrategia() {
