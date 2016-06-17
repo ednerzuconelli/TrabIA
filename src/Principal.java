@@ -34,7 +34,7 @@ public class Principal {
 		
 		
 		
-		for(int i=2;i<11;i++){
+		for(int i=2;i<101;i++){
 			genetico.inicializarRandom(empresaA);
 			genetico.inicializarRandom(empresaB);
 			

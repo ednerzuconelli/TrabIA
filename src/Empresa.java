@@ -35,6 +35,7 @@ public class Empresa {
 		this.setCapital(capital);
 		this.setQuantidadeVendida(0);
 		this.setEstMateriaPrima(0);
+		this.setQuantidadeSolicitada(0);
 	
 	}
 	
@@ -119,7 +120,7 @@ public class Empresa {
 		
 		custoTotal = custoInsumo +  custoFuncionario+custoMarketing;  
 		
-		lucro = (float) (((this.getQuantidadeSolicitada()*(this.getQuantidadeSolicitada()+0.3)) * (percetualLucro * (custoTotal/quantidadeProduzir))) - custoTotal);
+		lucro = (float) (((this.getQuantidadeSolicitada()*(this.getQuantidadeSolicitada()+0.3)) * (percetualLucro * (custoTotal/quantidadeProduzir))));
 		
 		return lucro;
 	}
@@ -137,8 +138,9 @@ public class Empresa {
 	
 	public Individuo selecionaMelhor(List<Individuo> populacao){
 		Individuo escolhido = populacao.get(0);
+		Converter converter = new Converter();
 		for (Individuo i: populacao){
-			if(i.getValor()>escolhido.getValor()){
+			if(i.getValor()>escolhido.getValor() && converter.Converter(i.getCromossomo().get(0),0)>= quantidadeSolicitada ){
 				escolhido = i;
 			}
 			
@@ -257,7 +259,7 @@ public class Empresa {
 		
 		if(this.getEstProduto()>=quantidadeVendida){
 			this.quantidadeVendida = quantidadeVendida;
-			this.setQuantidadeProduzir(this.getEstProduto()-quantidadeVendida);
+			this.setEstProduto(this.getEstProduto()-quantidadeVendida);
 		}else{
 			this.quantidadeVendida = this.getEstProduto();
 			this.setEstProduto(0);
