@@ -6,3 +6,7 @@
 /iss/.metadata
 /IA/nbproject/private/
 /IA/build/
+/.classpath
+/.project
+/bin/*.class
+/.settings
