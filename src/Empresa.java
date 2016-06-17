@@ -105,7 +105,7 @@ public class Empresa {
 	
 	public void mostraEstrategia(){
 		System.out.println("Quantidade Produzir:" + this.getQuantidadeProduzir());
-		System.out.println("Quantidade Funcionários:" + this.getFuncionario());
+		System.out.println("Quantidade Funcionï¿½rios:" + this.getFuncionario());
 		System.out.println("Quantidade Marketing:" + this.getCustoMarketing());
 		System.out.println("Quantidade Compra Insumo:" + this.getCompraInsumo());
 		System.out.println("Quantidade Percentual Lucro:" + this.getPercentuallucro());
@@ -140,7 +140,7 @@ public class Empresa {
 		Individuo escolhido = populacao.get(0);
 		Converter converter = new Converter();
 		for (Individuo i: populacao){
-			if(i.getValor()>escolhido.getValor() && converter.Converter(i.getCromossomo().get(0),0)>= quantidadeSolicitada ){
+			if(i.getValor()>escolhido.getValor() && (converter.Converter(i.getCromossomo().get(0),0)+this.getEstProduto())>= quantidadeSolicitada ){
 				escolhido = i;
 			}
 			
