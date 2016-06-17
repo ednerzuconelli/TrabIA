@@ -8,21 +8,21 @@ public class Converter {
 			if (letra == "A")
 				in = 100;
 			if (letra == "B")
-				in = 300;
+				in = 200;
 			if (letra == "C")
-				in = 600;
+				in = 300;
 			if (letra == "D")
-				in = 900;
+				in = 400;
 			break;
 		case 1:
 			if (letra == "A")
-				in = 5;
+				in = 50;
 			if (letra == "B")
-				in = 10;
+				in = 75;
 			if (letra == "C")
-				in = 15;
+				in = 100;
 			if (letra == "D")
-				in = 20;
+				in = 125;
 			break;
 		case 2:
 			if (letra == "A")

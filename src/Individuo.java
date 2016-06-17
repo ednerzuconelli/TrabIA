@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Individuo {
+public class Individuo implements Cloneable {
 	private float valor;
 	private List<String> cromossomo;
 	
@@ -29,6 +29,15 @@ public class Individuo {
 		this.valor = valor;
 	}
 	
+	public Object clone() {
+        try {
+            // call clone in Object.
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            System.out.println("Cloning not allowed.");
+            return this;
+        }
+    }
 	
 	
 }

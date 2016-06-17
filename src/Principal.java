@@ -3,8 +3,8 @@ import java.util.Random;
 
 public class Principal {
 	public static void main(String[] args){
-		Empresa empresaA = new Empresa((float) 100000.00);
-		Empresa empresaB = new Empresa((float) 100000.00);
+		Empresa empresaA = new Empresa((float) 20000.00);
+		Empresa empresaB = new Empresa((float) 20000.00);
 		
 		Genetico genetico =  new Genetico();
 		genetico.inicializarRandom(empresaA);
@@ -25,10 +25,43 @@ public class Principal {
 		System.out.println("Resultado:");
 		defineDistribuicao(empresaA,empresaB);
 		System.out.println("Empresa A Vendeu: "+ empresaA.getQuantidadeVendida());
+		empresaA.atualizaCapital();
+		empresaA.mostrarResultado();
 		System.out.println("Empresa B Vendeu: "+ empresaB.getQuantidadeVendida());
+		empresaB.atualizaCapital();
+		empresaB.mostrarResultado();
 		
 		
 		
+		
+		for(int i=2;i<11;i++){
+			genetico.inicializarRandom(empresaA);
+			genetico.inicializarRandom(empresaB);
+			
+			genetico.geraFilhos(empresaA);
+			genetico.geraFilhos(empresaB);
+			
+			genetico.escolheEstrategiaMelhor(empresaA);
+			genetico.escolheEstrategiaMelhor(empresaB);
+			
+			System.out.println("Rodada "+i);
+			System.out.println("\nEmpresa A");
+			empresaA.mostraEstrategia();
+			empresaA.atualiza();
+			System.out.println("\nEmpresa B");
+			empresaB.mostraEstrategia();
+			empresaB.atualiza();
+			
+			System.out.println("Resultado:");
+			defineDistribuicao(empresaA,empresaB);
+			System.out.println("Empresa A Vendeu: "+ empresaA.getQuantidadeVendida());
+			empresaA.atualizaCapital();
+			empresaA.mostrarResultado();
+			System.out.println("Empresa B Vendeu: "+ empresaB.getQuantidadeVendida());
+			empresaB.atualizaCapital();
+			empresaB.mostrarResultado();
+
+		}
 		
 		
 		
@@ -85,8 +118,8 @@ public class Principal {
 	}
 	
 	private static int geraMercado(){
-		Random rand = new Random(1000);
-		return rand.nextInt(90000);
+		Random rand = new Random(System.currentTimeMillis()%1000);
+		return rand.nextInt(1000);
 		
 	}
 }

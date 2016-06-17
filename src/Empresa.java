@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +16,7 @@ public class Empresa {
 	private float custoMarketing;
 	private int compraInsumo;
 	private int quantidadeProduzir;
+	private int quantidadeSolicitada;
 	private int funcionario;
 	private float percentuallucro;
 	
@@ -33,16 +35,29 @@ public class Empresa {
 		this.setCapital(capital);
 		this.setQuantidadeVendida(0);
 		this.setEstMateriaPrima(0);
-		this.setPreco(capital);
+	
 	}
 	
 	//decisoes
 	public void atualiza(){
 		this.setHomemhora(8*this.getFuncionario());
 		this.setEstMateriaPrima(this.getEstMateriaPrima()+this.getCompraInsumo());
-		this.setEstProduto(this.getEstProduto()+this.quantidadeProduzir);
-		this.setPreco(calculaCustoTotal()*this.getPercentuallucro());
+		this.setEstProduto(this.getEstProduto()+this.getQuantidadeProduzir());
+		this.setPreco((calculaCustoTotal()/this.getQuantidadeProduzir())*this.getPercentuallucro());
 		this.setCapital(this.getCapital()-calculaCustoTotal());
+		this.historicoEstrategia.clear();
+	}
+	
+	public void atualizaCapital(){
+		this.setCapital(this.getCapital()+this.getQuantidadeVendida()*this.getPreco());
+	}
+
+	
+	public void mostrarResultado(){
+		System.out.println("Quantidade que o mercado solicitou:"+this.getQuantidadeSolicitada());
+		DecimalFormat df = new DecimalFormat("0.00");
+		System.out.println("Custo Total: "+df.format(this.calculaCustoTotal()));
+		System.out.println("Capital: "+ df.format(this.getCapital()));
 	}
 	
 	//restricoes
@@ -55,8 +70,8 @@ public class Empresa {
 			
 	}
 	
-	public boolean resMaoDeObra(int quatidadeProduzir, int custoHomemHora){
-		if ((quantidadeProduzir* 5 <= custoHomemHora)){
+	public boolean resMaoDeObra(int quatidadeProducao, int custoHomemHora){
+		if ((quatidadeProducao* 2 <= custoHomemHora)){
 			return true;
 		} else 
 			return false;
@@ -104,7 +119,7 @@ public class Empresa {
 		
 		custoTotal = custoInsumo +  custoFuncionario+custoMarketing;  
 		
-		lucro = (quantidadeVendida * (percetualLucro * custoTotal)) - custoTotal;
+		lucro = (this.getQuantidadeSolicitada() * (percetualLucro * (custoTotal/quantidadeProduzir))) - custoTotal;
 		
 		return lucro;
 	}
@@ -216,6 +231,15 @@ public class Empresa {
 		this.percentuallucro = percentuallucro;
 	}
 
+	
+
+	public int getQuantidadeSolicitada() {
+		return quantidadeSolicitada;
+	}
+
+	public void setQuantidadeSolicitada(int quantidadeSolicitada) {
+		this.quantidadeSolicitada = quantidadeSolicitada;
+	}
 
 	public void addHistorico(Individuo individuo){
 		historicoEstrategia.add(individuo);
@@ -226,7 +250,19 @@ public class Empresa {
 	}
 
 	public void setQuantidadeVendida(int quantidadeVendida) {
-		this.quantidadeVendida = quantidadeVendida;
+		
+		this.setQuantidadeSolicitada(quantidadeVendida);
+
+		
+		
+		if(this.getEstProduto()>=quantidadeVendida){
+			this.quantidadeVendida = quantidadeVendida;
+			this.setQuantidadeProduzir(this.getEstProduto()-quantidadeVendida);
+		}else{
+			this.quantidadeVendida = this.getEstProduto();
+			this.setEstProduto(0);
+		}
+		
 	}
 
 	public List<Individuo> getHistoricoEstrategia() {
