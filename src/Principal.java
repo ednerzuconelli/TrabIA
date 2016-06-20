@@ -145,7 +145,7 @@ public class Principal {
 			System.out.println("\n\nEmpresa A seguiu a estratégia:"+estA+"%");
 			
 			estB = 99-estB; 
-			System.out.println("\n\nEmpresa A seguiu a estratégia:"+estB+"%");
+			System.out.println("\n\nEmpresa B seguiu a estratégia:"+estB+"%");
 		
 		
 	}

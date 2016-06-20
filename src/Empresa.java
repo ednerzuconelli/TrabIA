@@ -63,7 +63,7 @@ public class Empresa {
 	public void mostrarResultado(){
 		System.out.println("Quantidade que o mercado solicitou:"+this.getQuantidadeSolicitada());
 		System.out.println("Quantidade Restante no Estoque: "+this.getEstProduto());
-		System.out.println("Pre√ßo:" + this.getPreco());
+		System.out.println("PreÁo:" + this.getPreco());
 		DecimalFormat df = new DecimalFormat("0.00");
 		System.out.println("Custo Total: "+df.format(this.calculaCustoTotal()));
 		System.out.println("Capital: "+ df.format(this.getCapital()));
@@ -170,7 +170,7 @@ public class Empresa {
 	
 	public void mostraEstrategia(){
 		System.out.println("Quantidade Produzir:" + this.getQuantidadeProduzir());
-		System.out.println("Quantidade Funcion√°rios:" + this.getFuncionario());
+		System.out.println("Quantidade Funcion·rios:" + this.getFuncionario());
 		System.out.println("Quantidade Marketing:" + this.getCustoMarketing());
 		System.out.println("Quantidade Compra Insumo:" + this.getCompraInsumo());
 		System.out.println("Quantidade Percentual Lucro:" + this.getPercentuallucro());
@@ -216,14 +216,9 @@ public class Empresa {
 				custoTotal = custoInsumo + custoFuncionario + converter.Converter(i.getCromossomo().get(2), 2);
 				custoTotal = custoTotal/converter.Converter(i.getCromossomo().get(0), 0);
 				
-					
-					
 						escolhido = i;
 						entrou=true;
-					
-					
-					
-				
+							
 			
 			}
 		}	
