@@ -11,6 +11,10 @@ public class Empresa {
 	private int estMateriaPrima;
 	private int estProduto;
 	private float preco;
+	private float precoConcorrente;
+	private int rodada;
+	private int estrategia;
+	private boolean retaliar;
 	
 	//Parametros
 	private float custoMarketing;
@@ -36,7 +40,8 @@ public class Empresa {
 		this.setQuantidadeVendida(0);
 		this.setEstMateriaPrima(0);
 		this.setQuantidadeSolicitada(0);
-	
+		this.setRetaliar(false);
+		this.setRodada(1);
 	}
 	
 	//decisoes
@@ -44,9 +49,10 @@ public class Empresa {
 		this.setHomemhora(8*this.getFuncionario());
 		this.setEstMateriaPrima(this.getEstMateriaPrima()+this.getCompraInsumo());
 		this.setEstProduto(this.getEstProduto()+this.getQuantidadeProduzir());
-		this.setPreco((calculaCustoTotal()/this.getQuantidadeProduzir())*this.getPercentuallucro());
+		this.setPreco((calculaCustoTotal()/this.getQuantidadeProduzir())*((this.getPercentuallucro()/100)+1));
 		this.setCapital(this.getCapital()-calculaCustoTotal());
 		this.historicoEstrategia.clear();
+		this.setEstMateriaPrima(this.getEstMateriaPrima()-this.getQuantidadeProduzir()*3);
 	}
 	
 	public void atualizaCapital(){
@@ -56,6 +62,8 @@ public class Empresa {
 	
 	public void mostrarResultado(){
 		System.out.println("Quantidade que o mercado solicitou:"+this.getQuantidadeSolicitada());
+		System.out.println("Quantidade Restante no Estoque: "+this.getEstProduto());
+		System.out.println("Preço:" + this.getPreco());
 		DecimalFormat df = new DecimalFormat("0.00");
 		System.out.println("Custo Total: "+df.format(this.calculaCustoTotal()));
 		System.out.println("Capital: "+ df.format(this.getCapital()));
@@ -79,9 +87,59 @@ public class Empresa {
 	}
 	
 	public boolean resCustoProducao(int custoInsumo, int custoFuncionario, int custoMarketing){
-		if (custoInsumo + custoFuncionario + custoMarketing <= getCapital()){
+		if ((custoInsumo + custoFuncionario + custoMarketing)*1.03 <= this.getCapital()){
 			return true;
 		} else return false;
+	}
+	
+	
+	public boolean resPreco(float preco){
+		
+		if(preco>=120){
+			return true;
+		}
+		
+		return false;
+	}
+	public boolean atendeRestricaoFilhos(int quantidadeProduzir, int funcionarios, 
+			  int custoMarketing, int compraInsumo, int percetualLucro){
+		int quaProduzir = quantidadeProduzir;
+		int estoqueMateriaPrima = getEstMateriaPrima() + compraInsumo;
+		int custoHomemHora = funcionarios * 8;
+		int custoInsumo = compraInsumo * 2;
+		int custoFuncionario = funcionarios *150;
+		float preco = ((custoInsumo+custoFuncionario+custoMarketing)/quantidadeProduzir)*((percetualLucro/100)+1); 
+		boolean restricao=false;
+		
+		if ((resQuantidadeProducao(quaProduzir, estoqueMateriaPrima))
+				&& (resMaoDeObra(quaProduzir , custoHomemHora))
+				&& (resCustoProducao(custoInsumo, custoFuncionario, custoMarketing))){
+			restricao = true;
+		}
+		
+		if(this.getRodada()!=1){
+			
+			if(preco<=this.getPrecoConcorrente()&&restricao&&this.isRetaliar()){
+				return true;
+			}
+			
+			if(preco>=this.getPrecoConcorrente()&&restricao&&!this.isRetaliar()){
+				return true;
+			}
+			
+			
+			
+			
+			
+			
+		}else{
+			if(restricao){
+				return true;
+			}
+		}
+			
+		
+		return false;
 	}
 	
 	public boolean atendeRestricao(int quantidadeProduzir, int funcionarios, 
@@ -91,12 +149,19 @@ public class Empresa {
 		int custoHomemHora = funcionarios * 8;
 		int custoInsumo = compraInsumo * 2;
 		int custoFuncionario = funcionarios *150;
+		float preco = ((custoInsumo+custoFuncionario+custoMarketing)/quantidadeProduzir)*((percetualLucro/100)+1); 
+		boolean restricao=false;
+		
 		if ((resQuantidadeProducao(quaProduzir, estoqueMateriaPrima))
 				&& (resMaoDeObra(quaProduzir , custoHomemHora))
 				&& (resCustoProducao(custoInsumo, custoFuncionario, custoMarketing))){
-			return true;
-		} else return false;
+			restricao = true;
+		}
+		
+		
 			
+		
+		return restricao;
 	}
 	
 	public void aplicaEstrategia(){
@@ -109,6 +174,7 @@ public class Empresa {
 		System.out.println("Quantidade Marketing:" + this.getCustoMarketing());
 		System.out.println("Quantidade Compra Insumo:" + this.getCompraInsumo());
 		System.out.println("Quantidade Percentual Lucro:" + this.getPercentuallucro());
+		
 	}
 	
 	
@@ -120,7 +186,7 @@ public class Empresa {
 		
 		custoTotal = custoInsumo +  custoFuncionario+custoMarketing;  
 		
-		lucro = (float) (((this.getQuantidadeSolicitada()*(this.getQuantidadeSolicitada()+0.3)) * (percetualLucro * (custoTotal/quantidadeProduzir))));
+		lucro = (float) ((((percetualLucro/100)+1)*this.getQuantidadeVendida()) - (custoTotal/quantidadeProduzir));
 		
 		return lucro;
 	}
@@ -139,18 +205,48 @@ public class Empresa {
 	public Individuo selecionaMelhor(List<Individuo> populacao){
 		Individuo escolhido = populacao.get(0);
 		Converter converter = new Converter();
-		for (Individuo i: populacao){
-			if(i.getValor()>escolhido.getValor() && converter.Converter(i.getCromossomo().get(0),0)>= quantidadeSolicitada ){
-				escolhido = i;
-			}
-			
-		}
+		int custoInsumo, custoFuncionario;
+		float custoTotal;
+		boolean entrou =false;
 		
-		return escolhido;
+			for (Individuo i: populacao){
+				if(this.getEstrategia()==0){
+				custoInsumo = converter.Converter(i.getCromossomo().get(0), 0) * 2;
+				custoFuncionario = converter.Converter(i.getCromossomo().get(1), 1) *150;
+				custoTotal = custoInsumo + custoFuncionario + converter.Converter(i.getCromossomo().get(2), 2);
+				custoTotal = custoTotal/converter.Converter(i.getCromossomo().get(0), 0);
+				
+					
+					
+						escolhido = i;
+						entrou=true;
+					
+					
+					
+				
+			
+			}
+		}	
+			
+		
+			return escolhido;
+		
 		 
 		
 	}
 	
+	public Individuo selecionaMelhorLucro(List<Individuo> populacao) {
+		Individuo escolhido = populacao.get(0);
+		
+		for(Individuo i:populacao){
+			if(i.getValor()>escolhido.getValor()){
+				escolhido=i;
+			}
+		}
+		
+		return escolhido;
+	}
+
 	public boolean resCustoProducao(){
 		return false;
 		
@@ -269,6 +365,61 @@ public class Empresa {
 
 	public List<Individuo> getHistoricoEstrategia() {
 		return historicoEstrategia;
+	}
+
+	public float getPrecoConcorrente() {
+		return precoConcorrente;
+	}
+
+	public void setPrecoConcorrente(float precoConcorrente) {
+		this.precoConcorrente = precoConcorrente;
+		if(this.getEstrategia()==0){
+			if(precoConcorrente>=this.getPreco()){
+				this.setRetaliar(false);
+			}else{
+			
+				this.setRetaliar(true);
+			}
+		}	
+		
+		if(this.getEstrategia()==1){
+			if(precoConcorrente<this.getPreco()&&!this.isRetaliar()){
+				this.setRetaliar(true);
+			}	
+		}
+		
+		if(this.getEstrategia()==2){
+			this.setRetaliar(false);
+		}
+	}
+
+	public int getRodada() {
+		return rodada;
+	}
+
+	public void setRodada(int rodada) {
+		this.rodada = rodada;
+	}
+
+	public int getEstrategia() {
+		return estrategia;
+	}
+
+	public void setEstrategia(int estrategia) {
+		this.estrategia = estrategia;
+	}
+
+	public void addHistoricoAll(List<Individuo> novaPopulacao) {
+		this.historicoEstrategia.addAll(novaPopulacao);
+		
+	}
+
+	public boolean isRetaliar() {
+		return retaliar;
+	}
+
+	public void setRetaliar(boolean retaliar) {
+		this.retaliar = retaliar;
 	}
 	
 	

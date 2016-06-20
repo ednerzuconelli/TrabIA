@@ -6,13 +6,13 @@ public class Converter {
 		switch (index){
 		case 0:
 			if (letra == "A")
-				in = 25;
+				in = 15;
 			if (letra == "B")
-				in = 50;
+				in = 30;
 			if (letra == "C")
-				in = 100;
+				in = 60;
 			if (letra == "D")
-				in = 150;
+				in = 80;
 			break;
 		case 1:
 			if (letra == "A")
@@ -26,13 +26,13 @@ public class Converter {
 			break;
 		case 2:
 			if (letra == "A")
-				in = 5000;
+				in = 500;
 			if (letra == "B")
-				in = 10000;
+				in = 1000;
 			if (letra == "C")
-				in = 15000;
+				in = 1500;
 			if (letra == "D")
-				in = 20000;
+				in = 2000;
 			break;
 		case 3:
 			if (letra == "A")

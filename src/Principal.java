@@ -1,14 +1,72 @@
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Principal {
 	public static void main(String[] args){
-		Empresa empresaA = new Empresa((float) 20000.00);
-		Empresa empresaB = new Empresa((float) 20000.00);
+		int estA=0,estB=0;
+		
+		Empresa empresaA = new Empresa((float) 25000.00);
+		Empresa empresaB = new Empresa((float) 25000.00);
+		
+		
+		
+		int x = 0;
+		while(x!=1 && x!=2 && x!=3){
+			
+			System.out.println("Escolha a Estratégia da empresa A:");
+			System.out.println("1: Olho Por Olho.");
+			System.out.println("2: Retaliador Permanente.");
+			System.out.println("3: Cooperador Incondicional.");
+			
+			
+			Scanner scan = new Scanner(System.in);
+			x = scan.nextInt();
+			
+			switch (x) {
+			case 1:
+				empresaA.setEstrategia(0);
+				break;
+			case 2:
+				empresaA.setEstrategia(1);
+				break;
+			case 3:
+				empresaA.setEstrategia(2);
+				break;
+			}
+			
+		}
+		
+		
+		x = 0;
+		while(x!=1 && x!=2 && x!=3){
+			
+			System.out.println("Escolha a Estratégia da empresa B:");
+			System.out.println("1: Olho Por Olho.");
+			System.out.println("2: Retaliador Permanente.");
+			System.out.println("3: Cooperador Incondicional.");
+			
+			Scanner scan = new Scanner(System.in);
+			x = scan.nextInt();
+			
+			switch (x) {
+			case 1:
+				empresaB.setEstrategia(0);
+				break;
+			case 2:
+				empresaB.setEstrategia(1);
+				break;
+			case 3:
+				empresaA.setEstrategia(2);
+				break;	
+			}
+			
+		}
 		
 		Genetico genetico =  new Genetico();
 		genetico.inicializarRandom(empresaA);
 		genetico.inicializarRandom(empresaB);
+		
 		
 		genetico.escolheEstrategiaAleatoria(empresaA);
 		
@@ -22,47 +80,72 @@ public class Principal {
 		empresaB.mostraEstrategia();
 		empresaB.atualiza();
 		
-		System.out.println("Resultado:");
+		System.out.println("\nResultado:");
 		defineDistribuicao(empresaA,empresaB);
-		System.out.println("Empresa A Vendeu: "+ empresaA.getQuantidadeVendida());
+		System.out.println("\nEmpresa A Vendeu: "+ empresaA.getQuantidadeVendida());
 		empresaA.atualizaCapital();
 		empresaA.mostrarResultado();
-		System.out.println("Empresa B Vendeu: "+ empresaB.getQuantidadeVendida());
+		
+		System.out.println("\nEmpresa B Vendeu: "+ empresaB.getQuantidadeVendida());
 		empresaB.atualizaCapital();
 		empresaB.mostrarResultado();
 		
 		
 		
+		empresaA.setPrecoConcorrente(empresaB.getPreco());
+		empresaB.setPrecoConcorrente(empresaA.getPreco());
+	
+		
+		empresaA.setRodada(empresaA.getRodada()+1);
+		empresaB.setRodada(empresaB.getRodada()+1);
 		
 		for(int i=2;i<101;i++){
-			genetico.inicializarRandom(empresaA);
-			genetico.inicializarRandom(empresaB);
 			
-			genetico.geraFilhos(empresaA);
-			genetico.geraFilhos(empresaB);
+			System.out.println("\n\nRodada "+i);
+			System.out.println("\nEmpresa A");
+			genetico.inicializarRandom(empresaA);
+			if(genetico.geraFilhos(empresaA)){
+				estA++;	
+			}
 			
 			genetico.escolheEstrategiaMelhor(empresaA);
-			genetico.escolheEstrategiaMelhor(empresaB);
-			
-			System.out.println("Rodada "+i);
-			System.out.println("\nEmpresa A");
 			empresaA.mostraEstrategia();
 			empresaA.atualiza();
+			
+			
+			
+			
 			System.out.println("\nEmpresa B");
+			genetico.inicializarRandom(empresaB);
+			
+			if(genetico.geraFilhos(empresaB)){
+				estB++;
+			}
+			genetico.escolheEstrategiaMelhor(empresaB);
 			empresaB.mostraEstrategia();
 			empresaB.atualiza();
 			
-			System.out.println("Resultado:");
+			System.out.println("\nResultado:");
 			defineDistribuicao(empresaA,empresaB);
-			System.out.println("Empresa A Vendeu: "+ empresaA.getQuantidadeVendida());
+			System.out.println("\nEmpresa A Vendeu: "+ empresaA.getQuantidadeVendida());
 			empresaA.atualizaCapital();
 			empresaA.mostrarResultado();
-			System.out.println("Empresa B Vendeu: "+ empresaB.getQuantidadeVendida());
+			System.out.println("\nEmpresa B Vendeu: "+ empresaB.getQuantidadeVendida());
 			empresaB.atualizaCapital();
 			empresaB.mostrarResultado();
 
+			empresaA.setPrecoConcorrente(empresaB.getPreco());
+			empresaB.setPrecoConcorrente(empresaA.getPreco());
+			empresaA.setRodada(empresaA.getRodada()+1);
+			empresaB.setRodada(empresaB.getRodada()+1);
+			
 		}
 		
+			estA = 99-estA; 
+			System.out.println("\n\nEmpresa A seguiu a estratégia:"+estA+"%");
+			
+			estB = 99-estB; 
+			System.out.println("\n\nEmpresa A seguiu a estratégia:"+estB+"%");
 		
 		
 	}
@@ -119,7 +202,7 @@ public class Principal {
 	
 	private static int geraMercado(){
 		Random rand = new Random(System.currentTimeMillis()%1000);
-		return rand.nextInt(400);
+		return rand.nextInt(150);
 		
 	}
 }
