@@ -21,7 +21,7 @@ public class Genetico {
 		int i = 0;
 		populacao.clear();
 		
-		while(i<=50){
+		while(i<=150){
 			
 		  List<String> cromossomo = new ArrayList<String>();
 		  Individuo individuo = new Individuo();
@@ -85,6 +85,25 @@ public class Genetico {
 		}
 		return valido;
 	}
+	
+	private boolean atendeRestricaoFilhos(Individuo individuo, Empresa empresa){
+		boolean valido = false;
+		Converter converter = new Converter();
+		if (empresa.atendeRestricaoFilhos(converter.Converter(individuo.getCromossomo().get(0), 0), 
+				converter.Converter(individuo.getCromossomo().get(1), 1),
+				converter.Converter(individuo.getCromossomo().get(2), 2), 
+				converter.Converter(individuo.getCromossomo().get(3), 3), 
+				converter.Converter(individuo.getCromossomo().get(4), 4))){	
+		  valido = true;
+		
+		individuo.setValor(empresa.simulaReceita(converter.Converter(individuo.getCromossomo().get(0), 0), 
+				converter.Converter(individuo.getCromossomo().get(1), 1),
+				converter.Converter(individuo.getCromossomo().get(2), 2), 
+				converter.Converter(individuo.getCromossomo().get(3), 3), 
+				converter.Converter(individuo.getCromossomo().get(4), 4)));
+		}
+		return valido;
+	}
 
 	public void escolheEstrategiaAleatoria(Empresa empresa) {
 		
@@ -107,7 +126,7 @@ public void escolheEstrategiaMelhor(Empresa empresa) {
 		
 		
 		Converter converter = new Converter();
-		Individuo individuo = empresa.selecionaMelhor(empresa.getHistoricoEstrategia());
+		Individuo individuo = empresa.selecionaMelhorLucro(empresa.getHistoricoEstrategia());
 		
 		
 		empresa.setQuantidadeProduzir(converter.Converter(individuo.getCromossomo().get(0),0));
@@ -120,15 +139,24 @@ public void escolheEstrategiaMelhor(Empresa empresa) {
 		
 	}
 
-public void geraFilhos(Empresa empresa) {
+public boolean geraFilhos(Empresa empresa) {
+	boolean dificuldade = false;
 	List<Individuo> novaPopulacao = new ArrayList<Individuo>();
 	empresa.getHistoricoEstrategia().clear();
 	
 	List<Individuo> pais = verificaMelhor(populacao, empresa);
 	Random random = new Random();
-	
-	while(novaPopulacao.size()<100){
+
+	int j=0;
+	while(novaPopulacao.size()<50){
 		List<Individuo> filhos = new ArrayList<Individuo>();
+
+		if(j==10){
+			populacao.clear();
+			inicializarRandom(empresa);
+			pais = verificaMelhor(populacao, empresa);
+		}
+		
 		
 		if(random.nextFloat()<taxaCrossover){
 			filhos = crossover(pais);
@@ -140,19 +168,35 @@ public void geraFilhos(Empresa empresa) {
 		}
 		
 		
-		
-		for(Individuo f:filhos){
-			if(atendeRestricao(f, empresa)){
-				novaPopulacao.add(f);
-				empresa.addHistorico(f);
+		if(j<50){
+			for(Individuo f:filhos){
+				if(atendeRestricaoFilhos(f, empresa)){
+					novaPopulacao.add(f);
+				
+				}
+				
 			}
-			
+		}else{
+			for(Individuo f:filhos){
+				if(atendeRestricao(f, empresa)){
+					novaPopulacao.add(f);
+					if(!dificuldade){
+						System.out.println("Impossível seguir estratégia..");
+						dificuldade=true;
+					}
+				}
+				
+			}
 		}
 		
+		j++;
+		
+		
 	}
+	empresa.getHistoricoEstrategia().clear();
+	empresa.addHistoricoAll(novaPopulacao);
 	
-	
-	
+	return dificuldade;
 }
 
 private List<Individuo> crossover(List<Individuo> pais) {
