@@ -1,18 +1,16 @@
 ﻿import java.util.Random;
 
-
-
 public class Genetico {
 
-	public static void resultado(int[][] cromossomos, int[] resultados, String[] GASTOS) {
+	public static void resultado(int[][] cromossomos, int[] resultados, String[] cidades) {
 		int i, i2;
 		i=0;
-
-		for (i2 = 0; i2 < Principal.getGASTOS(); i2++) {
-			System.out.println(GASTOS[cromossomos[i][i2]] + " = "+ resultados[i2]);
+                System.out.println("Melhor caminho " );
+		for (i2 = 0; i2 <Principal.getNUMERO_CIDADES(); i2++) {
+			System.out.print(cidades[cromossomos[i][i2]] + " => ");
 		}
-		System.out.println(" ");
-		System.out.println("Resultado    = " + resultados[i]);
+		System.out.print(cidades[cromossomos[i][0]] + " ");
+		System.out.println(" Resultado: " + resultados[i]);
         }
         //renova os cromossomos possibilitando melhoras
 	public static void renovarCromossomos(int[][] cromossomos,
@@ -40,23 +38,24 @@ public class Genetico {
 						&& (resultados[pai1] != resultados[pai2]));
 
 				// pegando 3 caracteristicas do pai 1 aleatoriamente
-				for (i2 = 0; i2 < (int) Principal.getGASTOS() / 4; i2++) {
+				for (i2 = 0; i2 < (int) Principal.getNUMERO_CIDADES() / 4; i2++) {
 					int pos;
-					pos = new Random().nextInt(Principal.getGASTOS());
+					pos = new Random().nextInt(Principal.getNUMERO_CIDADES());
 					c_tmp[pos] = cromossomos[pai1][pos];
 				}
 				// pegando restante do pai 2
-				for (i2 = 0; i2 < (int) Principal.getGASTOS() / 4; i2++) {
-					int pos = new Random().nextInt(Principal.getGASTOS());
+				for (i2 = 0; i2 < (int) Principal.getNUMERO_CIDADES() / 4; i2++) {
+					int pos = new Random().nextInt(Principal.getNUMERO_CIDADES());
 					if (c_tmp[pos] == -1) {
-						if (valorValidoNoCromossomo(cromossomos[pai2][pos],	c_tmp)) {
+						if (valorValidoNoCromossomo(cromossomos[pai2][pos],
+								c_tmp)) {
 							c_tmp[pos] = cromossomos[pai2][pos];
 						}
 					}
 				}
 
 				// preenchendo o restante com aleatorios
-				for (i2 = 0; i2 < Principal.getGASTOS(); i2++) {
+				for (i2 = 0; i2 < Principal.getNUMERO_CIDADES(); i2++) {
 					if (c_tmp[i2] == -1) {
 						int crom_temp = valorValidoNoCromossomo(c_tmp);
 						c_tmp[i2] = crom_temp;
@@ -76,7 +75,7 @@ public class Genetico {
 	public static int[][] gerarCromossomosAleatoriamente(int[][] cromossomos) {
 
 		// inicializando cromossomos aleatoriamente
-		int[] c_tmp = new int[Principal.getGASTOS()];
+		int[] c_tmp = new int[Principal.getNUMERO_CIDADES()];
 
 		int i, i2;
 		for (i = 0; i < Principal.getNUMERO_POPULACAO(); i++) {
@@ -86,7 +85,7 @@ public class Genetico {
 				c_tmp = resetaCromossomo();
 
 				// gerando cromossomo - ok
-				for (i2 = 0; i2 < Principal.getGASTOS(); i2++) {
+				for (i2 = 0; i2 < Principal.getNUMERO_CIDADES(); i2++) {
 					c_tmp[i2] = valorValidoNoCromossomo(c_tmp);
 				}
 				crom_valido = cromossomoValido(c_tmp, cromossomos);
@@ -97,9 +96,9 @@ public class Genetico {
 	}
         
 	private static int[] resetaCromossomo() {
-		int[] c = new int[Principal.getGASTOS()];
+		int[] c = new int[Principal.getNUMERO_CIDADES()];
 		int i;
-		for (i = 0; i < Principal.getGASTOS(); i++) {
+		for (i = 0; i < Principal.getNUMERO_CIDADES(); i++) {
 			c[i] = -1;
 		}
 		return c;
@@ -109,9 +108,9 @@ public class Genetico {
 		int crom_temp;
 		boolean valido;
 		do {
-			crom_temp = new Random().nextInt(Principal.getGASTOS());
+			crom_temp = new Random().nextInt(Principal.getNUMERO_CIDADES());
 			valido = true;
-			for (int ii = 0; ii < Principal.getGASTOS(); ii++) {
+			for (int ii = 0; ii < Principal.getNUMERO_CIDADES(); ii++) {
 				if (c_tmp[ii] == crom_temp)
 					valido = false;
 			}
@@ -124,7 +123,7 @@ public class Genetico {
 		boolean valido;
 
 		valido = true;
-		for (int ii = 0; ii < Principal.getGASTOS(); ii++) {
+		for (int ii = 0; ii < Principal.getNUMERO_CIDADES(); ii++) {
 			if (c_tmp[ii] == crom_temp)
 				valido = false;
 		}
@@ -138,25 +137,26 @@ public class Genetico {
 
 		for (j = 0; j < Principal.getNUMERO_POPULACAO(); j++) {
 			int n_iguais = 0;
-			for (j2 = 0; j2 < Principal.getGASTOS(); j2++) {
+			for (j2 = 0; j2 < Principal.getNUMERO_CIDADES(); j2++) {
 				if (c_tmp[j2] == cromossomos[j][j2]) {
 					n_iguais++;
 				}
 			}
 
-			if (n_iguais == Principal.getGASTOS())
+			if (n_iguais == Principal.getNUMERO_CIDADES())
 				crom_valido = false;
 		}
 		return crom_valido;
 	}
 
 	public static void imprimir(int[][] cromossomos, int[] resultados,
-			String[] GASTOS) {
+			String[] cidades) {
 		int i, i2;
 		for (i = 0; i < Principal.getNUMERO_POPULACAO(); i++) {
-			for (i2 = 0; i2 < Principal.getGASTOS(); i2++) {
-				System.out.print(GASTOS[cromossomos[i][i2]] + " => ");
+			for (i2 = 0; i2 < Principal.getNUMERO_CIDADES(); i2++) {
+				System.out.print(cidades[cromossomos[i][i2]] + " => ");
 			}
+			System.out.print(cidades[cromossomos[i][0]] + " ");
 			System.out.println(" Resultados: " + resultados[i]);
 		}
 	}
@@ -167,7 +167,7 @@ public class Genetico {
 		// calculando o resultado
 		for (i = 0; i < Principal.getNUMERO_POPULACAO(); i++) {
 			int resTmp = 0;
-			for (i2 = 0; i2 < Principal.getGASTOS() - 1; i2++) {
+			for (i2 = 0; i2 < Principal.getNUMERO_CIDADES() - 1; i2++) {
 				resTmp += mapa[cromossomos[i][i2]][cromossomos[i][i2 + 1]];
 			}
 			resTmp+=mapa[cromossomos[i][0]][cromossomos[i][i2]];
