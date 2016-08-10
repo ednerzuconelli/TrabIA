@@ -16,8 +16,8 @@ public class Principal {
 			System.out.println("Qual o valor de capital inicial?\n");
 			Scanner valor = new Scanner(System.in);
 			empresaA = new Empresa(valor.nextFloat());
-		} else	empresaA = new Empresa((float) 25000.00);
-		Empresa empresaB = new Empresa((float) 25000.00);
+		} else	empresaA = new Empresa((float) 5000.00);
+		Empresa empresaB = new Empresa((float) 5000.00);
 		
 		
 		
@@ -175,15 +175,15 @@ public class Principal {
 				faliub = true;
 			if (faliua || faliub){
 				if (faliua && faliub){
-					System.out.println("Ambas faliram");
+					System.out.println("\nAmbas faliram");
 					System.out.println("valor divida "+empresaA.getValordivida());
 					System.out.println("valor divida "+empresaB.getValordivida());
 				}else if (faliua){
-					System.out.println("Empresa A Faliu B Venceu");
+					System.out.println("\nEmpresa A Faliu B Venceu");
 					System.out.println("valor divida = "+empresaA.getValordivida());
 					System.out.println("trabalhou no vermelho = "+empresaA.getCapitalnegativo());
 				} else if (faliub) {
-					System.out.println("Empresa B Faliu A Venceu");
+					System.out.println("\nEmpresa B Faliu A Venceu");
 					System.out.println("Valor divida = "+empresaB.getValordivida());
 					System.out.println("Trabalhou no vermelho = "+empresaB.getCapitalnegativo());
 				}
@@ -203,9 +203,11 @@ public class Principal {
 			System.out.println("\n\nEmpresa B seguiu a estratégia:"+estB+"%");
 		if (empresaA.getCapital()<empresaB.getCapital()){
 			System.out.println("\nEmpresa B Vencedora com capital = "+empresaB.getCapital());
+			System.out.println("Com diferença de = "+(empresaB.getCapital()-empresaA.getCapital()));
 		}
 		if (empresaB.getCapital()<empresaA.getCapital()){
 			System.out.println("\nEmpresa A Vencedora com capital = "+empresaA.getCapital());
+			System.out.println("Com diferença de = "+(empresaA.getCapital()-empresaB.getCapital()));
 		}
 		
 	}
