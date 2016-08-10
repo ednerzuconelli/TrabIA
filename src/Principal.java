@@ -5,16 +5,25 @@ import java.util.Scanner;
 public class Principal {
 	public static void main(String[] args){
 		int estA=0,estB=0;
-		
-		Empresa empresaA = new Empresa((float) 25000.00);
+		int y = 0;
+		System.out.println("Jogar contra Máquina? 1=sim ou 0=não");
+		Scanner joga = new Scanner(System.in);
+		y = joga.nextInt();
+		Empresa empresaA = null;
+		if (y==1) {
+			System.out.println("Qual o valor de capital inicial?");
+			Scanner valor = new Scanner(System.in);
+			empresaA = new Empresa(valor.nextFloat());
+		} else	empresaA = new Empresa((float) 25000.00);
 		Empresa empresaB = new Empresa((float) 25000.00);
 		
 		
 		
 		int x = 0;
 		while(x!=1 && x!=2 && x!=3){
-			
-			System.out.println("Escolha a Estratégia da empresa A:");
+			if (y==1) 
+				System.out.println("Escolha sua Estratégia:");
+			else System.out.println("Escolha a Estratégia da empresa A:");
 			System.out.println("1: Olho Por Olho.");
 			System.out.println("2: Retaliador Permanente.");
 			System.out.println("3: Cooperador Incondicional.");
@@ -36,33 +45,37 @@ public class Principal {
 			}
 			
 		}
+		if (y==1){
+		  Random ran = new Random(System.currentTimeMillis()%1000);
+		  empresaB.setEstrategia(ran.nextInt(3));
+		}  
+		 else { 
+			x = 0;
 		
-		
-		x = 0;
-		while(x!=1 && x!=2 && x!=3){
-			
-			System.out.println("Escolha a Estratégia da empresa B:");
-			System.out.println("1: Olho Por Olho.");
-			System.out.println("2: Retaliador Permanente.");
-			System.out.println("3: Cooperador Incondicional.");
-			
-			Scanner scan = new Scanner(System.in);
-			x = scan.nextInt();
-			
-			switch (x) {
-			case 1:
-				empresaB.setEstrategia(0);
-				break;
-			case 2:
-				empresaB.setEstrategia(1);
-				break;
-			case 3:
-				empresaA.setEstrategia(2);
-				break;	
+			while(x!=1 && x!=2 && x!=3){
+				
+				System.out.println("Escolha a Estratégia da empresa B:");
+				System.out.println("1: Olho Por Olho.");
+				System.out.println("2: Retaliador Permanente.");
+				System.out.println("3: Cooperador Incondicional.");
+				
+				Scanner scan = new Scanner(System.in);
+				x = scan.nextInt();
+				
+				switch (x) {
+				case 1:
+					empresaB.setEstrategia(0);
+					break;
+				case 2:
+					empresaB.setEstrategia(1);
+					break;
+				case 3:
+					empresaB.setEstrategia(2);
+					break;	
+				}
+				
 			}
-			
 		}
-		
 		Genetico genetico =  new Genetico();
 		genetico.inicializarRandom(empresaA);
 		genetico.inicializarRandom(empresaB);
