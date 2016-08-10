@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class Empresa {
@@ -23,6 +24,8 @@ public class Empresa {
 	private int quantidadeSolicitada;
 	private int funcionario;
 	private float percentuallucro;
+	private int capitalnegativo;
+	private float valordivida;
 	
 	//custo
 	private float custoInsumo;
@@ -416,9 +419,87 @@ public class Empresa {
 	public void setRetaliar(boolean retaliar) {
 		this.retaliar = retaliar;
 	}
-	
-	
-	
-	
 
+	public int getCapitalnegativo() {
+		return capitalnegativo;
+	}
+
+	public void setCapitalnegativo(int capitalnegativo) {
+		this.capitalnegativo = capitalnegativo;
+	}
+
+	public float getValordivida() {
+		return valordivida;
+	}
+
+	public void setValordivida(float valordivida) {
+		this.valordivida = valordivida;
+	}
+	
+	
+	public boolean varificaFalencia(){
+		boolean faliu=false;
+		
+		if (this.getCapital() < 0 ){
+			this.setCapitalnegativo(this.getCapitalnegativo()+1);
+			this.setValordivida(this.getValordivida()+this.getCapital());
+		} else this.setCapitalnegativo(0);
+		
+		if (this.getCapitalnegativo()>3 || this.getValordivida()< -10000.00)
+			faliu=true;
+		
+		return  faliu;
+	}
+	
+	   public void jogadorHumano(){
+		   System.out.println("\nQuantidades de Insumos? ");
+		   Scanner insumos = new Scanner(System.in);
+		   int ins = -1;
+		   while (ins == -1) 
+			   ins = insumos.nextInt();
+		   this.setCompraInsumo(ins);
+		   System.out.println("\nValor a investir em marketing? ");
+		   Scanner marketing = new Scanner(System.in);
+		   float mar = -1;
+		   while (mar == -1) 
+			   mar = marketing.nextFloat();
+		   this.setCustoMarketing(mar);
+		   System.out.println("\nQuantidades de Matéria Prima? ");
+		   Scanner matPrima = new Scanner(System.in);
+		   int mat = -1;
+		   while (mat == -1) 
+			   mat = matPrima.nextInt();
+		   this.setEstMateriaPrima(mat);
+		   this.setEstProduto(0);
+		   System.out.println("\nQuantidades Funcionarios alocáveis? ");
+		   Scanner funcionarios = new Scanner(System.in);
+		   int fun = -1;
+		   while (fun == -1) 
+			   fun = funcionarios.nextInt();
+		   this.setFuncionario(fun);
+		   System.out.println("\nValor homem/hora? ");
+		   Scanner homem = new Scanner(System.in);
+		   int hom = -1;
+		   while (hom == -1) 
+			   hom = homem.nextInt();
+		   this.setHomemhora(hom);
+		   System.out.println("\nMargem de Lucro? ");
+		   Scanner margemLucro = new Scanner(System.in);
+		   float lucro = -1;
+		   while (lucro == -1) 
+			   lucro = margemLucro.nextFloat();
+		   this.setPercentuallucro(lucro);
+		   System.out.println("\nPreço de Venda? ");
+		   Scanner preco = new Scanner(System.in);
+		   float pre = -1;
+		   while (pre == -1) 
+			   pre = preco.nextFloat();
+		   this.setPreco(pre);
+		   System.out.println("\nQuantidades a produzir? ");
+		   Scanner produzir = new Scanner(System.in);
+		   int prod = -1;
+		   while (prod == -1) 
+			   prod = produzir.nextInt();
+		   this.setQuantidadeProduzir(prod);
+	   }
 }

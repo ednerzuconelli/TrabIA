@@ -6,12 +6,14 @@ public class Principal {
 	public static void main(String[] args){
 		int estA=0,estB=0;
 		int y = 0;
-		System.out.println("Jogar contra Máquina? 1=sim ou 0=não");
+		boolean faliua=false;
+		boolean faliub=false;
+		System.out.println("Jogar contra Máquina? 1=sim ou 0=não\n");
 		Scanner joga = new Scanner(System.in);
 		y = joga.nextInt();
 		Empresa empresaA = null;
 		if (y==1) {
-			System.out.println("Qual o valor de capital inicial?");
+			System.out.println("Qual o valor de capital inicial?\n");
 			Scanner valor = new Scanner(System.in);
 			empresaA = new Empresa(valor.nextFloat());
 		} else	empresaA = new Empresa((float) 25000.00);
@@ -76,12 +78,25 @@ public class Principal {
 				
 			}
 		}
+		
+		System.out.println("\nQuantas rodadas Jogar? ");
+		
+		Scanner rodadas = new Scanner(System.in);
+		int rod = -1;
+		while (rod == -1) 
+		 rod = rodadas.nextInt();
+		
+		
+		
 		Genetico genetico =  new Genetico();
-		genetico.inicializarRandom(empresaA);
+		if (y==1){
+		  empresaA.jogadorHumano();	
+		} else
+		  genetico.inicializarRandom(empresaA);
 		genetico.inicializarRandom(empresaB);
 		
-		
-		genetico.escolheEstrategiaAleatoria(empresaA);
+		if (y!=1)
+		  genetico.escolheEstrategiaAleatoria(empresaA);
 		
 		genetico.escolheEstrategiaAleatoria(empresaB);
 		
@@ -89,6 +104,7 @@ public class Principal {
 		System.out.println("\nEmpresa A");
 		empresaA.mostraEstrategia();
 		empresaA.atualiza();
+		
 		System.out.println("\nEmpresa B");
 		empresaB.mostraEstrategia();
 		empresaB.atualiza();
@@ -103,8 +119,6 @@ public class Principal {
 		empresaB.atualizaCapital();
 		empresaB.mostrarResultado();
 		
-		
-		
 		empresaA.setPrecoConcorrente(empresaB.getPreco());
 		empresaB.setPrecoConcorrente(empresaA.getPreco());
 	
@@ -112,16 +126,24 @@ public class Principal {
 		empresaA.setRodada(empresaA.getRodada()+1);
 		empresaB.setRodada(empresaB.getRodada()+1);
 		
-		for(int i=2;i<101;i++){
+		
+		
+		for(int i=2;i<rod;i++){
 			
 			System.out.println("\n\nRodada "+i);
 			System.out.println("\nEmpresa A");
-			genetico.inicializarRandom(empresaA);
-			if(genetico.geraFilhos(empresaA)){
-				estA++;	
-			}
 			
-			genetico.escolheEstrategiaMelhor(empresaA);
+			if (y==1){
+				  empresaA.jogadorHumano();	
+			} else {
+				genetico.inicializarRandom(empresaA);
+				  
+				if(genetico.geraFilhos(empresaA)){
+					estA++;	
+				}
+				
+				genetico.escolheEstrategiaMelhor(empresaA);
+			}
 			empresaA.mostraEstrategia();
 			empresaA.atualiza();
 			
@@ -146,7 +168,27 @@ public class Principal {
 			System.out.println("\nEmpresa B Vendeu: "+ empresaB.getQuantidadeVendida());
 			empresaB.atualizaCapital();
 			empresaB.mostrarResultado();
-
+            
+			if (empresaA.varificaFalencia())
+				faliua = true;
+			if (empresaB.varificaFalencia())
+				faliub = true;
+			if (faliua || faliub){
+				if (faliua && faliub){
+					System.out.println("Ambas faliram");
+					System.out.println("valor divida "+empresaA.getValordivida());
+					System.out.println("valor divida "+empresaB.getValordivida());
+				}else if (faliua){
+					System.out.println("Empresa A Faliu B Venceu");
+					System.out.println("valor divida = "+empresaA.getValordivida());
+					System.out.println("trabalhou no vermelho = "+empresaA.getCapitalnegativo());
+				} else if (faliub) {
+					System.out.println("Empresa B Faliu A Venceu");
+					System.out.println("Valor divida = "+empresaB.getValordivida());
+					System.out.println("Trabalhou no vermelho = "+empresaB.getCapitalnegativo());
+				}
+				break;
+			}
 			empresaA.setPrecoConcorrente(empresaB.getPreco());
 			empresaB.setPrecoConcorrente(empresaA.getPreco());
 			empresaA.setRodada(empresaA.getRodada()+1);
@@ -159,7 +201,12 @@ public class Principal {
 			
 			estB = 99-estB; 
 			System.out.println("\n\nEmpresa B seguiu a estratégia:"+estB+"%");
-		
+		if (empresaA.getCapital()<empresaB.getCapital()){
+			System.out.println("\nEmpresa B Vencedora com capital = "+empresaB.getCapital());
+		}
+		if (empresaB.getCapital()<empresaA.getCapital()){
+			System.out.println("\nEmpresa A Vencedora com capital = "+empresaA.getCapital());
+		}
 		
 	}
 	
@@ -218,4 +265,6 @@ public class Principal {
 		return rand.nextInt(150);
 		
 	}
+	
+	
 }
