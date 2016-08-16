@@ -1,12 +1,37 @@
-﻿
+﻿import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class Principal {
 
 	private static int NUMERO_CIDADES = 9;
-    private static int NUMERO_POPULACAO = 15;
+    private static int NUMERO_POPULACAO = 1000;
+	
     
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		String[] cidades = null;
+		try {
+			   FileReader arq = new FileReader("D:/git/trabalhoIA/att48.txt");
+		       BufferedReader lerArq = new BufferedReader(arq);
+		       NUMERO_POPULACAO = Integer.parseInt(lerArq.readLine()); // lê a primeira linha;
+		       NUMERO_CIDADES = NUMERO_POPULACAO; 
+		       String linha = lerArq.readLine();
+		       cidades = new String[NUMERO_CIDADES];
+		       int cont = 0;
+		       while (linha != null) {
+		    	   cidades[cont] = linha.substring(0, 2).trim();
+		           
+		    	   System.out.printf("%s\n", cidades[cont]);
+		           cont++;
+		           linha = lerArq.readLine(); // lê da segunda até a última linha
+		         }
+		       
+		       arq.close();
+			} catch (IOException e) {
+		        System.err.printf("Erro na abertura do arquivo.\n",
+		        e.getMessage());
+		    } 
+		
 		boolean mostrarEvolucao = false; //usado para imprimir a evoluçao, caso false lista apenas o melhor caminho.
 		float taxaSobrevivencia = (float) 0.5;
 		int numeroEvolucoes = 60;
@@ -22,7 +47,7 @@ public class Principal {
 				{ 11, 33, 29, 10, 82, 32, 59, 0, 32 }, 
                                 { 27, 13, 15, 20, 22, 27, 30, 32, 0} };
                 //lista de cidades a serem percorridas, ordenada, mutada
-		String[] cidades = { "A", "B", "C", "D", "E", "F", "G", "H", "I" };
+		//String[] cidades = { "A", "B", "C", "D", "E", "F", "G", "H", "I" };
                 
 		int[][] cromossomos = new int[NUMERO_POPULACAO][NUMERO_CIDADES];
 		int[] resultados = new int[NUMERO_POPULACAO];
